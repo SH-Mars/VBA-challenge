@@ -26,6 +26,7 @@ Sub YearlyPrice():
 
     Dim rowcount As Long
     Dim tickercount As Long
+    Dim position As Integer
 
     rowcount = Cells(Rows.Count, 1).End(xlUp).Row
     tickercount = 2
@@ -34,16 +35,25 @@ Sub YearlyPrice():
     Range("K1").value = "Percent Change"
     Range("L1").value = "Total Stock Volume"
     
+    If rowcount = 753001 Then
+        position = 250
+    ElseIf rowcount = 756001 Then
+        position = 251
+    ElseIf rowcount = 759001 Then
+        position = 252
+    End If
+    
+    
     For i = 2 To rowcount
 
         'If there is a new ticker then
         If Cells(i, 1).value <> Cells(i + 1, 1) Then
         'Take the (close price - open price) and put it in the appropriate cell
-        Cells(tickercount, 10).value = Cells(i, 6).value - Cells(i - 250, 3).value
+        Cells(tickercount, 10).value = Cells(i, 6).value - Cells(i - position, 3).value
         'Take the ((close price/open price)-1) and put it in the appropriate cell
-        Cells(tickercount, 11).value = (Cells(i, 6).value / Cells(i - 250, 3).value) - 1
+        Cells(tickercount, 11).value = (Cells(i, 6).value / Cells(i - position, 3).value) - 1
         'Sum the volume
-        Cells(tickercount, 12).value = WorksheetFunction.Sum(Range(Cells(i, 7), Cells(i - 250, 7)))
+        Cells(tickercount, 12).value = WorksheetFunction.Sum(Range(Cells(i, 7), Cells(i - position, 7)))
         
         CondColor = Cells(tickercount, 10).value
         Select Case CondColor
@@ -59,6 +69,7 @@ Sub YearlyPrice():
         tickercount = tickercount + 1
 
         End If
+        
     Next i
     
 End Sub
